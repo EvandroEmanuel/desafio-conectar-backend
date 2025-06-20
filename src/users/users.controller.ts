@@ -25,6 +25,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -91,6 +92,19 @@ export class UsersController {
         updatedAt: 'dd/MM/yyyy hh:mm:ss | null',
       },
     ],
+  })
+  @ApiQuery({
+    name: 'query',
+    description: 'Filtros globais.',
+    examples: {
+      value: {
+        search: '?search=name | email / ?search=John | john.doe@example.com',
+        role: '?role=admin | user',
+        isActive: '&isActive=true | false',
+        startDate: '?startDate=2023-01-01',
+        finishDate: '&finishDate=2023-12-31',
+      },
+    },
   })
   async findAll(@Query() query: any) {
     try {
