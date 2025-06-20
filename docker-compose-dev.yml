@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: conectar_desafio
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: conectar_desafio_database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: mB7gbeDUufhZZrTjQOreatYrKO2vbKBu
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:

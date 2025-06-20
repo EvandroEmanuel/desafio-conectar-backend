@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: Docker/nginx
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - static:/app/static:ro
+      - certbot-web:/vol/www
+      - proxy-dhparams:/vol/proxy
+      - certbot-certs:/etc/letsencrypt
+      - ./logs/nginx:/var/log/nginx
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+      - EMAIL=${EMAIL:-evandroemanoel1234567@gmail.com}
+    networks:
+      - app_net
+
+  certbot:
+    build:
+      context: Docker/certbot
+    command:
+      - /opt/certify-init.sh
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+      - EMAIL=${EMAIL:-evandroemanoel1234567@gmail.com}
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt/
+      - ./logs/certbot:/var/log/letsencrypt
+    depends_on:
+      - nginx
+    networks:
+      - app_net
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - app_net
+
+  api:
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile
+    command: npm run start:prod
+    restart: always
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./Docker/api/env_prod.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./Docker/api/sa-east-1-bundle.pem:/app/sa-east-1-bundle.pem
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+      - EMAIL=${EMAIL:-evandroemanoel1234567@gmail.com}
+    networks:
+      - app_net
+
+volumes:
+  static:
+  certbot-web:
+  proxy-dhparams:
+  certbot-certs:
+
+networks:
+  app_net:
+    driver: bridge
