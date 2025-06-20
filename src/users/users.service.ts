@@ -165,6 +165,7 @@ export class UsersService {
       updatedAt: new Date(),
     });
 
+    await this.userRepository.save(user);
     return {
       name: user.name,
       email: user.email,
