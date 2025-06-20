@@ -8,12 +8,13 @@ Este repositório foi criado para o desafio técnico da Conectar e está dispon�
 
 ## ✨ Tecnologias Utilizadas
 
-* **NestJS** — Framework Node.js modular e escalável
-* **TypeORM** — ORM para banco de dados relacional
-* **PostgreSQL** — Banco relacional robusto
-* **JWT** — Autenticação via token
-* **Swagger** — Documentação interativa
-* **Docker (opcional)** — Containerização do ambiente
+- **NestJS** — Framework Node.js modular e escalável
+- **Jest** — Testes unitários e de integração com cobertura e estrutura robusta
+- **TypeORM** — ORM para banco de dados relacional
+- **PostgreSQL** — Banco relacional robusto
+- **JWT** — Autenticação via token
+- **Swagger** — Documentação interativa
+- **Docker (opcional)** — Containerização do ambiente
 
 ---
 
@@ -25,17 +26,17 @@ Estrutura modular organizada em pastas por contexto (`auth`, `users`, `utils`), 
 
 ### ✅ Autenticação e Autorizacão
 
-* JWT com `sub`, `name` e `role` no payload.
-* Guardas personalizados: `AuthGuard` e `RolesGuard`.
-* Acesso controlado via decorator `@Roles()`.
+- JWT com `sub`, `name` e `role` no payload.
+- Guardas personalizados: `AuthGuard` e `RolesGuard`.
+- Acesso controlado via decorator `@Roles()`.
 
 ### ✅ Filtros Reutilizáveis
 
-* `UtilsService.applyGlobalFilters()` centraliza filtros reutilizáveis: `search`, `isActive`, `startDate`, `finishDate`, `role`, `page`, `limit`.
+- `UtilsService.applyGlobalFilters()` centraliza filtros reutilizáveis: `search`, `isActive`, `startDate`, `finishDate`, `role`, `page`, `limit`.
 
 ### ✅ Padronização de Horário
 
-* Datas ajustadas para o fuso horário de Brasília (UTC-3) com `toLocaleString`.
+- Datas ajustadas para o fuso horário de Brasília (UTC-3) com `toLocaleString`.
 
 ---
 
@@ -43,9 +44,9 @@ Estrutura modular organizada em pastas por contexto (`auth`, `users`, `utils`), 
 
 ### 🔧 Requisitos
 
-* Node.js >= 18
-* PostgreSQL >= 13
-* Docker (opcional)
+- Node.js >= 18
+- PostgreSQL >= 13
+- Docker (opcional)
 
 ### 📄 Clone o repositório
 
@@ -86,8 +87,8 @@ npm run start:dev
 
 ### Login
 
-* Rota: `POST /auth/login`
-* Body:
+- Rota: `POST /auth/login`
+- Body:
 
 ```json
 {
@@ -96,7 +97,7 @@ npm run start:dev
 }
 ```
 
-* Retorno:
+- Retorno:
 
 ```json
 {
@@ -107,8 +108,8 @@ npm run start:dev
 
 ### Controle de Acesso
 
-* `@UseGuards(AuthGuard, RolesGuard)` para proteger rotas
-* `@Roles('admin')` ou `@Roles('user')` define quem pode acessar
+- `@UseGuards(AuthGuard, RolesGuard)` para proteger rotas
+- `@Roles('admin')` ou `@Roles('user')` define quem pode acessar
 
 ---
 
@@ -118,19 +119,19 @@ Documentação interativa disponível em:
 
 [http://localhost:3000/api](http://localhost:3000/api)
 
-* Testes com JWT direto na interface
-* Modelos documentados (DTOs)
-* Facilidade para exploradores de API
+- Testes com JWT direto na interface
+- Modelos documentados (DTOs)
+- Facilidade para exploradores de API
 
 ---
 
 ## 🔢 Testes Manuais
 
-* Criar usuários via `POST /users`
-* Logar via `POST /auth/login`
-* Testar `GET /users` com token de admin
-* Testar `GET /users/me` com token de user
-* Testar `GET /users/inativos` para listar usuários sem login nos últimos 30 dias
+- Criar usuários via `POST /users`
+- Logar via `POST /auth/login`
+- Testar `GET /users` com token de admin
+- Testar `GET /users/me` com token de user
+- Testar `GET /users/inativos` para listar usuários sem login nos últimos 30 dias
 
 ---
 
@@ -140,18 +141,32 @@ Documentação interativa disponível em:
 src/
 ├── auth/
 │   ├── auth.controller.ts
+│   ├── auth.controller.spec.ts
 │   ├── auth.service.ts
+│   ├── auth.service.spec.ts
 │   ├── auth.guard.ts
 │   ├── roles.guard.ts
 │   └── auth.decorator.ts
 │
+├── auth/
+│   ├── entities/
+│   ├── ├── user.entity.ts
+│   ├── migrations/
+│   ├── ├── 1750375209970-users.ts
+│   ├── db.module.ts
+│   ├──typeOrm.migration-config.ts
 ├── users/
 │   ├── users.controller.ts
+│   ├── users.controller.spec.ts
 │   ├── users.service.ts
+│   ├── users.service.spec.ts
 │   ├── dto/
-│   └── entities/
+│   ├── ├── create-users.dto.ts
+│   ├── ├── update-users.dto.ts
 │
 ├── utils/
+│   ├── enum/
+│   ├── ├── user-role.enum.ts
 │   └── utils.service.ts
 │
 ├── main.ts
