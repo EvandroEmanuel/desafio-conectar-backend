@@ -142,23 +142,40 @@ export class UsersService {
 
   async updateUser(userId: string, dto: UpdateUsersDto) {
     const user = await this.userRepository.findOneBy({ id: userId });
+
     if (!user) {
       throw new HttpException(
         `Usuário com id ${userId} não encontrado`,
         HttpStatus.NOT_FOUND,
       );
     }
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    if (dto.email && dto.email !== user.email) {
+      const existingUser = await this.userRepository.findOne({
+        where: { email: dto.email },
+      });
+
+      if (existingUser && existingUser.id !== userId) {
+        throw new HttpException(`Email já está em uso`, HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    let hashedPassword: string | undefined;
+    if (dto.password) {
+      hashedPassword = await bcrypt.hash(dto.password, 10);
+    }
 
     this.userRepository.merge(user, {
-      name: dto.name,
-      password: hashedPassword,
-      role: dto.role,
-      isActive: dto.isActive,
+      name: dto.name ?? user.name,
+      email: dto.email ?? user.email,
+      role: dto.role ?? user.role,
+      isActive: dto.isActive ?? user.isActive,
+      password: hashedPassword ?? user.password,
       updatedAt: new Date(),
     });
 
     await this.userRepository.save(user);
+
     return {
       name: user.name,
       email: user.email,

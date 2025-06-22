@@ -116,6 +116,7 @@ describe('UsersController', () => {
       const req = { user: { sub: userId } };
       const dto: UpdateUsersDto = {
         name: 'John Updated',
+        email: 'john.updated@example.com',
         password: 'newpass',
         role: UserRole.USER,
         isActive: true,
@@ -135,6 +136,7 @@ describe('UsersController', () => {
       const userId = 'admin-id';
       const dto: UpdateUsersDto = {
         name: 'Admin Update',
+        email: 'admin.updated@example.com',
         password: 'adminpass',
         role: UserRole.ADMIN,
         isActive: true,

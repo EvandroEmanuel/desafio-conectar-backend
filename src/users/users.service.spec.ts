@@ -216,6 +216,7 @@ describe('UsersService', () => {
 
       const dto: UpdateUsersDto = {
         name: 'New Name',
+        email: 'new@mail.com',
         password: 'newpassword',
         role: UserRole.ADMIN,
         isActive: false,

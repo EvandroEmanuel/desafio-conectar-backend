@@ -7,6 +7,10 @@ export class UpdateUsersDto {
   @IsString()
   name: string;
 
+  @ApiProperty({ example: 'john.doe@example.com' })
+  @IsString()
+  email: string;
+
   @ApiProperty({ example: 'john123' })
   @IsString()
   password: string;
