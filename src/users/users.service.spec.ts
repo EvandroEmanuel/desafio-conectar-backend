@@ -62,12 +62,17 @@ describe('UsersService', () => {
       repository.findOne.mockResolvedValue(undefined as any);
       repository.create.mockReturnValue(dto as any);
       repository.save.mockResolvedValue(dto as any);
-      jest.spyOn(bcrypt, 'hash').mockImplementation(async (password: string, saltOrRounds: number) => 'hashedPassword');
-
+      jest
+        .spyOn(bcrypt, 'hash')
+        .mockImplementation(
+          async (password: string, saltOrRounds: number) => 'hashedPassword',
+        );
 
       const result = await service.createUser(dto);
 
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { email: dto.email } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { email: dto.email },
+      });
       expect(repository.create).toHaveBeenCalled();
       expect(repository.save).toHaveBeenCalled();
       expect(result).toHaveProperty('name', dto.name);
@@ -78,7 +83,9 @@ describe('UsersService', () => {
 
     it('should throw error if email already exists', async () => {
       repository.findOne.mockResolvedValue({} as UserEntity);
-      await expect(service.createUser({} as any)).rejects.toThrow(HttpException);
+      await expect(service.createUser({} as any)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
   // #endregion
@@ -92,7 +99,9 @@ describe('UsersService', () => {
       const result = await service.findByUserEmail('test@mail.com');
 
       expect(result).toEqual(mockUser);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { email: 'test@mail.com' } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { email: 'test@mail.com' },
+      });
     });
   });
   // #endregion
@@ -101,15 +110,20 @@ describe('UsersService', () => {
   describe('findAll', () => {
     it('should return list of users and count', async () => {
       const qbMock = {
-        getManyAndCount: jest.fn().mockResolvedValue([[{
-          id: '1',
-          name: 'John',
-          email: 'john@mail.com',
-          role: 'user',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }], 1]),
+        getManyAndCount: jest.fn().mockResolvedValue([
+          [
+            {
+              id: '1',
+              name: 'John',
+              email: 'john@mail.com',
+              role: 'user',
+              isActive: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ],
+          1,
+        ]),
       };
       utilsService.applyGlobalFilters.mockResolvedValue(qbMock);
 
@@ -145,7 +159,9 @@ describe('UsersService', () => {
     it('should throw if user not found', async () => {
       repository.findOneBy.mockResolvedValue(undefined as any);
 
-      await expect(service.findUserById('nonexistent')).rejects.toThrow(HttpException);
+      await expect(service.findUserById('nonexistent')).rejects.toThrow(
+        HttpException,
+      );
     });
   });
   // #endregion
@@ -157,15 +173,17 @@ describe('UsersService', () => {
         where: jest.fn().mockReturnThis(),
         orWhere: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([{
-          id: '1',
-          name: 'John',
-          email: 'john@mail.com',
-          role: 'user',
-          lastLogin: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }]),
+        getMany: jest.fn().mockResolvedValue([
+          {
+            id: '1',
+            name: 'John',
+            email: 'john@mail.com',
+            role: 'user',
+            lastLogin: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]),
       };
       repository.createQueryBuilder.mockReturnValue(qb as any);
 
@@ -198,7 +216,6 @@ describe('UsersService', () => {
 
       const dto: UpdateUsersDto = {
         name: 'New Name',
-        email: 'new@mail.com',
         password: 'newpassword',
         role: UserRole.ADMIN,
         isActive: false,
@@ -206,11 +223,14 @@ describe('UsersService', () => {
 
       repository.findOneBy.mockResolvedValue(existingUser as any);
       repository.findOne.mockResolvedValue(undefined as any);
-      jest.spyOn(bcrypt, 'hash').mockImplementation(async (password: string, saltOrRounds: number) => 'hashedPassword');
+      jest
+        .spyOn(bcrypt, 'hash')
+        .mockImplementation(
+          async (password: string, saltOrRounds: number) => 'hashedPassword',
+        );
       jest.spyOn(repository, 'merge').mockImplementation(() => {
         return Object.assign(existingUser, {
           name: dto.name,
-          email: dto.email,
           password: 'newHashedPassword',
           role: dto.role,
           isActive: dto.isActive,
@@ -222,13 +242,11 @@ describe('UsersService', () => {
       const result = await service.updateUser(userId, dto);
 
       expect(repository.findOneBy).toHaveBeenCalledWith({ id: userId });
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { email: dto.email } });
       expect(bcrypt.hash).toHaveBeenCalledWith(dto.password, 10);
       expect(repository.merge).toHaveBeenCalled();
       expect(repository.save).toHaveBeenCalled();
 
       expect(result).toHaveProperty('name', dto.name);
-      expect(result).toHaveProperty('email', dto.email);
       expect(result).toHaveProperty('role', dto.role);
       expect(result).toHaveProperty('isActive', dto.isActive);
       expect(result).toHaveProperty('createdAt');
@@ -237,7 +255,9 @@ describe('UsersService', () => {
 
     it('should throw if user not found', async () => {
       repository.findOneBy.mockResolvedValue(undefined as any);
-      await expect(service.updateUser('1', {} as any)).rejects.toThrow(HttpException);
+      await expect(service.updateUser('1', {} as any)).rejects.toThrow(
+        HttpException,
+      );
     });
 
     it('should throw if email already exists on another user', async () => {
@@ -250,12 +270,17 @@ describe('UsersService', () => {
         isActive: true,
       };
       const existingUser = { id: userId, email: 'old@mail.com' } as UserEntity;
-      const emailInUseUser = { id: '2', email: 'existing@mail.com' } as UserEntity;
+      const emailInUseUser = {
+        id: '2',
+        email: 'existing@mail.com',
+      } as UserEntity;
 
       repository.findOneBy.mockResolvedValue(existingUser);
       repository.findOne.mockResolvedValue(emailInUseUser);
 
-      await expect(service.updateUser(userId, dto)).rejects.toThrow(HttpException);
+      await expect(service.updateUser(userId, dto)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
   // #endregion

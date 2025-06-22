@@ -148,17 +148,10 @@ export class UsersService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const existingEmail = await this.userRepository.findOne({
-      where: { email: dto.email },
-    });
-    if (existingEmail && existingEmail.id !== userId) {
-      throw new HttpException(`email already exist`, HttpStatus.BAD_REQUEST);
-    }
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     this.userRepository.merge(user, {
       name: dto.name,
-      email: dto.email,
       password: hashedPassword,
       role: dto.role,
       isActive: dto.isActive,
