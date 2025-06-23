@@ -48,14 +48,13 @@ describe('UsersController', () => {
     jest.clearAllMocks();
   });
 
-  // Teste criação do usuário
   describe('create', () => {
     it('should call usersService.createUser with dto', async () => {
       const dto: CreateUsersDto = {
         name: 'John Doe',
         email: 'john.doe@example.com',
         password: 'john123',
-        role: UserRole.USER, // ajuste se usar enum
+        role: UserRole.USER, 
       };
       mockUsersService.createUser.mockResolvedValue({ id: '1', ...dto });
 
@@ -67,7 +66,6 @@ describe('UsersController', () => {
     });
   });
 
-  // Teste findAll
   describe('findAll', () => {
     it('should call usersService.findAll with query params', async () => {
       const query = { search: 'john' };
@@ -81,7 +79,6 @@ describe('UsersController', () => {
     });
   });
 
-  // Teste findUserById (usuário logado)
   describe('findUserById', () => {
     it('should call usersService.findUserById with req.user.sub', async () => {
       const userId = '123';
@@ -96,7 +93,6 @@ describe('UsersController', () => {
     });
   });
 
-  // Teste findInactiveUsers
   describe('findInactiveUsers', () => {
     it('should call usersService.findInactiveUsers', async () => {
       const mockUsers = [{ id: '1', name: 'Inactive User' }];
@@ -109,7 +105,6 @@ describe('UsersController', () => {
     });
   });
 
-  // Teste updateUser (usuário logado)
   describe('updateUser', () => {
     it('should call usersService.updateUser with req.user.sub and dto', async () => {
       const userId = '123';
@@ -151,7 +146,6 @@ describe('UsersController', () => {
     });
   });
 
-  // Teste delete
   describe('delete', () => {
     it('should call usersService.delete with id', async () => {
       const userId = 'del-id';

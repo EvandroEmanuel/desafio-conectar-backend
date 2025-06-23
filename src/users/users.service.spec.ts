@@ -49,7 +49,6 @@ describe('UsersService', () => {
     utilsService = module.get(UtilsService);
   });
 
-  // #region createUser
   describe('createUser', () => {
     it('should create a user successfully', async () => {
       const dto: CreateUsersDto = {
@@ -88,9 +87,7 @@ describe('UsersService', () => {
       );
     });
   });
-  // #endregion
 
-  // #region findByUserEmail
   describe('findByUserEmail', () => {
     it('should return a user by email', async () => {
       const mockUser = { id: '1', email: 'test@mail.com' } as UserEntity;
@@ -104,9 +101,7 @@ describe('UsersService', () => {
       });
     });
   });
-  // #endregion
 
-  // #region findAll
   describe('findAll', () => {
     it('should return list of users and count', async () => {
       const qbMock = {
@@ -135,9 +130,7 @@ describe('UsersService', () => {
       expect(result.data[0]).toHaveProperty('name', 'John');
     });
   });
-  // #endregion
 
-  // #region findUserById
   describe('findUserById', () => {
     it('should return a user if found', async () => {
       const mockUser = {
@@ -164,9 +157,7 @@ describe('UsersService', () => {
       );
     });
   });
-  // #endregion
 
-  // #region findInactiveUsers
   describe('findInactiveUsers', () => {
     it('should return inactive users', async () => {
       const qb = {
@@ -197,9 +188,7 @@ describe('UsersService', () => {
       expect(result[0]).toHaveProperty('name', 'John');
     });
   });
-  // #endregion
 
-  // #region updateUser
   describe('updateUser', () => {
     it('should update a user successfully', async () => {
       const userId = 'some-uuid';
@@ -284,9 +273,7 @@ describe('UsersService', () => {
       );
     });
   });
-  // #endregion
 
-  // #region delete
   describe('delete', () => {
     it('should delete a user successfully', async () => {
       const userId = '1';
@@ -306,5 +293,4 @@ describe('UsersService', () => {
       await expect(service.delete('1')).rejects.toThrow(HttpException);
     });
   });
-  // #endregion
 });

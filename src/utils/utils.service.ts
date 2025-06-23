@@ -37,12 +37,10 @@ export class UtilsService {
 
     const queryBuilder = repository.createQueryBuilder(alias);
 
-    // Relações
     relations.forEach((relation) => {
       queryBuilder.leftJoinAndSelect(`${alias}.${relation}`, relation);
     });
 
-    // Filtro de busca (search)
     if (search.trim()) {
       const searchConditions = searchColumns
         .map((column) => {
@@ -58,7 +56,6 @@ export class UtilsService {
       });
     }
 
-    // Filtro de isActive
     if (isActive === 'true' || isActive === 'false') {
       queryBuilder.andWhere(`${alias}.isActive = :isActive`, {
         isActive: isActive === 'true',
@@ -69,7 +66,6 @@ export class UtilsService {
       queryBuilder.andWhere(`${alias}.role = :role`, { role });
     }
 
-    // Filtro por data
     if (!isNaN(Date.parse(startDate ?? ''))) {
       queryBuilder.andWhere(`${alias}.createdAt >= :startDate`, {
         startDate,
@@ -82,7 +78,6 @@ export class UtilsService {
       });
     }
 
-    // Filtros dinâmicos adicionais
     Object.entries(otherFilters).forEach(([key, value]) => {
       if (
         ![
@@ -99,7 +94,6 @@ export class UtilsService {
       }
     });
 
-    // Paginação
     const pageNumber = parseInt(page || '1', 10);
     const limitNumber = parseInt(limit || '20', 10);
 

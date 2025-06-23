@@ -1,6 +1,3 @@
-#!/bin/sh
-
-# Waits for nginx to be available, then gets the first certificate.
 
 set -e
 

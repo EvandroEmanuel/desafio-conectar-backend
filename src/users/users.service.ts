@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { UtilsService } from 'src/utils/utils.service';
+import { UserRole } from 'src/utils/enum/user-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +28,7 @@ export class UsersService {
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
-      role: dto.role,
+      role: dto.role ?? UserRole.USER,
       createdAt: new Date(),
     });
     await this.userRepository.save(user);
